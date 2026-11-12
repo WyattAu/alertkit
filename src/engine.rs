@@ -208,18 +208,32 @@ mod tests {
         let mut engine = Engine::new(vec![rule()]);
         let first = engine.evaluate_observation(&quake_obs(Some(5.2)), 5_000);
         assert_eq!(first.len(), 1);
-        assert_eq!(first.first().map(|a| a.rule_id.as_str()), Some("quake-major"));
+        assert_eq!(
+            first.first().map(|a| a.rule_id.as_str()),
+            Some("quake-major")
+        );
         // Same entity inside the cooldown window: suppressed.
-        assert!(engine.evaluate_observation(&quake_obs(Some(6.1)), 10_000).is_empty());
+        assert!(engine
+            .evaluate_observation(&quake_obs(Some(6.1)), 10_000)
+            .is_empty());
         // Past the cooldown: fires again.
-        assert_eq!(engine.evaluate_observation(&quake_obs(Some(6.1)), 1_000_000).len(), 1);
+        assert_eq!(
+            engine
+                .evaluate_observation(&quake_obs(Some(6.1)), 1_000_000)
+                .len(),
+            1
+        );
     }
 
     #[test]
     fn no_fire_below_threshold_or_missing_magnitude() {
         let mut engine = Engine::new(vec![rule()]);
-        assert!(engine.evaluate_observation(&quake_obs(Some(3.0)), 1_000).is_empty());
-        assert!(engine.evaluate_observation(&quake_obs(None), 1_000).is_empty());
+        assert!(engine
+            .evaluate_observation(&quake_obs(Some(3.0)), 1_000)
+            .is_empty());
+        assert!(engine
+            .evaluate_observation(&quake_obs(None), 1_000)
+            .is_empty());
     }
 
     #[test]
